@@ -2,8 +2,6 @@ import express from "express";
 import path from "path";
 import fs from "fs";
 import dotenv from "dotenv";
-import multer from "multer";
-import pdf from "pdf-parse";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 
@@ -17,25 +15,9 @@ app.use(express.json());
 
 // Path definitions using process.cwd()
 const DATA_DIR = path.join(process.cwd(), "data");
-const DOCS_DIR = path.join(DATA_DIR, "docs");
 const ROLES_PATH = path.join(DATA_DIR, "members_roles.json");
 const PROJECTS_PATH = path.join(DATA_DIR, "historical_projects.json");
 const VIBES_PATH = path.join(DATA_DIR, "vibe_check_feedback.json");
-
-// Multer storage
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: (req, file, cb) => {
-      if (!fs.existsSync(DOCS_DIR)) {
-        fs.mkdirSync(DOCS_DIR, { recursive: true });
-      }
-      cb(null, DOCS_DIR);
-    },
-    filename: (req, file, cb) => {
-      cb(null, file.originalname);
-    },
-  }),
-});
 
 // Verify directories and create database templates if they do not exist
 function initializeDatabase() {
@@ -265,26 +247,6 @@ const readRoles = () => JSON.parse(fs.readFileSync(ROLES_PATH, "utf-8"));
 const readProjects = () => JSON.parse(fs.readFileSync(PROJECTS_PATH, "utf-8"));
 const readVibes = () => JSON.parse(fs.readFileSync(VIBES_PATH, "utf-8"));
 
-const getPdfContent = async () => {
-  let content = "";
-  if (fs.existsSync(DOCS_DIR)) {
-    const files = fs.readdirSync(DOCS_DIR);
-    for (const file of files) {
-      if (file.endsWith(".pdf")) {
-        const filePath = path.join(DOCS_DIR, file);
-        try {
-          const dataBuffer = fs.readFileSync(filePath);
-          const data = await pdf(dataBuffer);
-          content += `\n\n--- DOCUMENT: ${file} ---\n${data.text}\n`;
-        } catch (e) {
-          console.error(`Error parsing PDF: ${file}`, e);
-        }
-      }
-    }
-  }
-  return content;
-};
-
 // Write database files safely
 const writeRoles = (data: any) => fs.writeFileSync(ROLES_PATH, JSON.stringify(data, null, 2));
 const writeProjects = (data: any) => fs.writeFileSync(PROJECTS_PATH, JSON.stringify(data, null, 2));
@@ -302,14 +264,6 @@ app.get("/api/org/roles", (req, res) => {
   } catch (err: any) {
     res.status(500).json({ error: "Failed to read roles directory" });
   }
-});
-
-// Admin Document Upload
-app.post("/api/admin/upload", upload.single("file"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: "No file uploaded" });
-  }
-  res.json({ success: true, message: "File uploaded successfully: " + req.file.filename });
 });
 
 // Update org roles directory
@@ -465,7 +419,6 @@ app.post("/api/bot/chat", async (req, res) => {
   const ai = getGemini();
   const currentRoles = readRoles();
   const currentProjects = readProjects();
-  const documentContext = await getPdfContent();
 
   // If Gemini API is available, use LLM parser
   if (ai) {
@@ -477,9 +430,6 @@ ${JSON.stringify(currentRoles, null, 2)}
 
 === HISTORICAL EVENT LOGS ===
 ${JSON.stringify(currentProjects, null, 2)}
-
-=== UPLOADED DOCUMENTS ===
-${documentContext}
 
 User request: "${message}"
 

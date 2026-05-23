@@ -1,3 +1,11 @@
+export interface HallOfFameMember {
+  id: string;
+  name: string;
+  year: string;
+  achievement: string;
+  photoUrl?: string;
+}
+
 export interface FormLink {
   name: string;
   url: string;

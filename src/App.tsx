@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
+  Star,
   Bot,
   Users,
   FileText,
@@ -35,10 +36,11 @@ import {
   Cloud,
   X
 } from "lucide-react";
-import { RoleDirectoryItem, HistoricalProject, VibeCheck, ChatMessage } from "./types";
+import { RoleDirectoryItem, HistoricalProject, VibeCheck, ChatMessage, HallOfFameMember } from "./types";
 import { SAMPLE_MEETING_MINUTES, QUICK_START_SUGGESTIONS } from "./mockData";
 import ConstellationBackground from "./components/ConstellationBackground";
 import SignInForm from "./components/SignInForm";
+import HallOfFame from "./components/HallOfFame";
 
 // Robust dynamic fallback layers for static/offline hosting platforms like Vercel
 const FALLBACK_ROLES: RoleDirectoryItem[] = [
@@ -265,8 +267,12 @@ export default function App() {
   const [vibes, setVibes] = useState<VibeCheck[]>([]);
 
   // UI Selection triggers
-  const [activeTab, setActiveTab] = useState<"chat" | "directory" | "historical" | "handoff" | "vibe">("directory");
+  const [activeTab, setActiveTab] = useState<"chat" | "directory" | "historical" | "vibe" | "hallOfFame">("directory");
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [hallOfFameMembers] = useState<HallOfFameMember[]>([
+    { id: "1", name: "Sarah Connor", year: "2024", achievement: "Founding member and first budget lead." },
+    { id: "2", name: "John Doe", year: "2025", achievement: "Lead developer on the solution challenge project." }
+  ]);
   const [loading, setLoading] = useState<{ [key: string]: boolean }>({
     init: true,
     chat: false,
@@ -337,7 +343,6 @@ export default function App() {
   });
 
   const [showSettingsModal, setShowSettingsModal] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [projectSearchQuery, setProjectSearchQuery] = useState("");
   const [selectedProjectTag, setSelectedProjectTag] = useState("All");
@@ -963,36 +968,6 @@ Try asking me about **DevFest**, **Solution Challenge**, or **Build with AI**!`;
     }
   };
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (file.type !== "application/pdf") {
-      triggerToast("Please upload a PDF file.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      setLoading(prev => ({ ...prev, upload: true }));
-      const response = await fetch("/api/admin/upload", {
-        method: "POST",
-        body: formData
-      });
-      if (response.ok) {
-        triggerToast("Knowledge Base PDF uploaded and indexed successfully!");
-      } else {
-        throw new Error("Upload failed");
-      }
-    } catch (err) {
-      triggerToast("Failed to upload document.");
-    } finally {
-      setLoading(prev => ({ ...prev, upload: false }));
-    }
-  };
-
   return (
     <div className="min-h-screen bg-[#F8F9FA] text-[#202124] font-sans antialiased flex flex-col selection:bg-[#4285F4]/20">
       
@@ -1435,6 +1410,17 @@ Try asking me about **DevFest**, **Solution Challenge**, or **Build with AI**!`;
               <span className="bg-purple-600 text-white text-[9.5px] font-bold px-1.5 py-0.5 rounded-full inline-flex items-center justify-center">
                 {vibes.length}
               </span>
+            </button>
+            <button
+              onClick={() => setActiveTab("hallOfFame")}
+              className={`py-2 px-4 rounded-full text-xs font-semibold flex items-center gap-2 cursor-pointer transition-all hover:scale-102 duration-150 ${
+                activeTab === "hallOfFame"
+                  ? "bg-[#FBBC05]/10 text-[#FBBC05] border border-[#FBBC05]/20 shadow-sm"
+                  : "text-gray-600 hover:bg-slate-50 hover:text-gray-900 border border-transparent"
+              }`}
+            >
+              <Star className={`w-4 h-4 ${activeTab === "hallOfFame" ? "text-[#FBBC05]" : "text-gray-400"}`} />
+              <span>Hall of Fame</span>
             </button>
           </nav>
 
@@ -2077,114 +2063,9 @@ Try asking me about **DevFest**, **Solution Challenge**, or **Build with AI**!`;
                     </div>
                   )}
 
-                  {/* TAB 4: AUTOMATED MEETING MINUTES HANDOFF - Geometric Balance styling */}
-                  {activeTab === "handoff" && (
-                    <div className="flex-1 flex flex-col">
-                      <div className="border-b border-gray-200 pb-4 mb-5">
-                        <h2 className="text-xl font-bold font-sans text-gray-800 flex items-center gap-2">
-                          <FileText className="w-5 h-5 text-[#FBBC05]" />
-                          Automated "Council Handoff" Assistant
-                        </h2>
-                        <p className="text-xs text-gray-500">
-                          Feed raw meeting transcript scripts. The Lore Master extracts concrete responsibilities and highlights critical cross-committee dependencies.
-                        </p>
-                      </div>
-
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1">
-                        
-                        {/* LEFT FORM: INPUT MINUTES */}
-                        <div className="flex flex-col">
-                          <div className="flex justify-between items-center mb-2.5">
-                            <span className="text-xs font-bold text-gray-500">Raw Transcript / Simulated Webhook Payload:</span>
-                            <button
-                              onClick={() => {
-                                setMinutesInput(SAMPLE_MEETING_MINUTES);
-                                triggerToast("Prefilled template loaded!");
-                              }}
-                              className="text-[10px] uppercase tracking-wider font-bold border border-gray-200 bg-white text-gray-500 py-1 px-2.5 rounded hover:bg-slate-50 cursor-pointer shadow-2xs transition-colors"
-                            >
-                              Prefill Template
-                            </button>
-                          </div>
-                          
-                          <textarea
-                            value={minutesInput}
-                            onChange={(e) => setMinutesInput(e.target.value)}
-                            placeholder="Type or paste core meeting transcripts..."
-                            className="flex-1 min-h-[260px] bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-[#FBBC05] p-3.5 rounded-xl text-xs font-mono leading-relaxed text-gray-700 shadow-inner"
-                          />
-
-                          <button
-                            onClick={handleHandoffSubmit}
-                            disabled={loading.handoff || !minutesInput.trim()}
-                            className="mt-3 bg-[#FBBC05] hover:opacity-95 active:scale-98 text-[#3D3000] font-bold py-2.5 px-5 rounded-full flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer"
-                          >
-                            {loading.handoff ? (
-                              <>
-                                <RefreshCw className="w-4 h-4 animate-spin" />
-                                <span>Generating structured handoff...</span>
-                              </>
-                            ) : (
-                              <>
-                                <Sparkles className="w-4 h-4" />
-                                <span>Compile Structured Handoff (3-Bullets)</span>
-                              </>
-                            )}
-                          </button>
-                        </div>
-
-                        {/* RIGHT PREVIEW: STRUCTURED CHECKLIST OUTPUT */}
-                        <div className="bg-slate-50 p-5 border border-gray-200 rounded-xl flex flex-col justify-between shadow-inner">
-                          <div>
-                            <div className="flex justify-between items-center border-b border-gray-200 pb-2.5 mb-4">
-                              <span className="text-xs font-bold text-gray-500 flex items-center gap-1.5">
-                                <FileCheck className="w-4 h-4 text-[#FBBC05]" />
-                                Master Structured Handoff Block
-                              </span>
-                              {handoffSource && (
-                                <span className={`text-[9.5px] font-bold px-2 py-0.5 rounded-full ${
-                                  handoffSource === "Gemini AI" ? "bg-blue-100 text-[#4285F4]" : "bg-slate-200 text-gray-500"
-                                }`}>
-                                  {handoffSource}
-                                </span>
-                              )}
-                            </div>
-
-                            {handoffResults ? (
-                              <div className="space-y-3.5">
-                                {handoffResults.split(/\n+/).map((bullet, bIdx) => {
-                                  if (!bullet.trim()) return null;
-                                  // Strip leading symbols (-, •, *, Numbers)
-                                  const textOnly = bullet.replace(/^[*\-•\d.\s]+/g, "");
-                                  return (
-                                    <div
-                                      key={bIdx}
-                                      className="bg-white p-3.5 rounded-xl border border-gray-200 shadow-xs flex items-start space-x-3.5"
-                                    >
-                                      <span className="w-5.5 h-5.5 rounded-full bg-[#FBBC05]/15 text-[#B06000] flex items-center justify-center font-bold text-xs shrink-0 border border-[#FBBC05]/20">
-                                        {bIdx + 1}
-                                      </span>
-                                      <p className="text-xs leading-relaxed text-gray-700 font-medium">{textOnly}</p>
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            ) : (
-                              <div className="h-48 flex flex-col items-center justify-center text-center text-gray-400">
-                                <HelpCircle className="w-7 h-7 text-gray-300 mb-2" />
-                                <p className="text-xs font-medium">No summary generated yet.</p>
-                                <p className="text-[10px] text-gray-400 mt-0.5">Submit the transcript file on the left to activate.</p>
-                              </div>
-                            )}
-                          </div>
-
-                          <div className="text-[10px] text-gray-400 tracking-wide mt-4 pt-3 border-t border-gray-200 italic font-normal">
-                            💡 Design Note: Ideal for forwarding to Discord webhook channels or pasting directly in team newsletters!
-                          </div>
-                        </div>
-
-                      </div>
-                    </div>
+                  {/* TAB 5: HALL OF FAME */}
+                  {activeTab === "hallOfFame" && (
+                    <HallOfFame members={hallOfFameMembers} />
                   )}
 
                   {/* TAB 5: SECURE VIBE CHECK BOX - Geometric Balance styling with Content Moderation Rules */}
@@ -2261,7 +2142,7 @@ Try asking me about **DevFest**, **Solution Challenge**, or **Build with AI**!`;
                             className={`mt-3.5 w-full font-bold py-2.5 px-5 rounded-full flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer ${
                               vibeCooldown > 0 
                                 ? "bg-gray-300 text-gray-550 border border-gray-400/20 cursor-not-allowed" 
-                                : "bg-[#EA4335] hover:opacity-95 active:scale-98 text-white"
+                                : "bg-[#34A853] hover:opacity-95 active:scale-98 text-white"
                             }`}
                           >
                             <ShieldCheck className="w-4.5 h-4.5" />
@@ -2691,25 +2572,6 @@ Try asking me about **DevFest**, **Solution Challenge**, or **Build with AI**!`;
                   </span>
                 </div>
               </div>
-            </div>
-
-            <div className="border-t border-gray-200 mt-5 pt-5">
-              <label className="text-xs font-bold text-gray-500 block mb-2">Knowledge Base Management</label>
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileUpload}
-                className="hidden"
-                accept="application/pdf"
-              />
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={loading.upload}
-                className="w-full bg-slate-100 hover:bg-slate-200 text-gray-700 text-xs font-bold py-2 px-4 rounded-full cursor-pointer transition-all flex items-center justify-center gap-2"
-              >
-                {loading.upload ? "Uploading..." : "Upload Knowledge PDF"}
-              </button>
             </div>
 
             <div className="flex justify-end gap-2 pt-5 mt-5 border-t border-gray-200">
