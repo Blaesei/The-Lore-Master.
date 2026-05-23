@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-google-blue: #4285F4;
+  --color-google-red: #EA4335;
+  --color-google-yellow: #FBBC05;
+  --color-google-green: #34A853;
+  --color-bg-base: #F8F9FA;
+  --color-border-base: #E0E0E0;
+}
+
+/* Custom Geometric Balance Theme utility classes */
+.google-blue { color: #4285F4; }
+.google-red { color: #EA4335; }
+.google-yellow { color: #FBBC05; }
+.google-green { color: #34A853; }
+
+.bg-google-blue { background-color: #4285F4; }
+.bg-google-red { background-color: #EA4335; }
+.bg-google-yellow { background-color: #FBBC05; }
+.bg-google-green { background-color: #34A853; }
+
+.card-geometric {
+  background: white;
+  border: 1px solid #E0E0E0;
+  border-radius: 12px;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.card-geometric:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.pill-geometric {
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 12px;
+}
+
+.header-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}

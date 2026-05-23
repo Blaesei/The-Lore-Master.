@@ -1,0 +1,6 @@
+{
+  "name": "The Lore Master",
+  "description": "An autonomous student organization historian and chat concierge bot to streamline GDG/student operations, event debriefs, and handoff summaries.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

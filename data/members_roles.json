@@ -1,0 +1,110 @@
+[
+  {
+    "role": "Community Lead",
+    "name": "Alex Rivera",
+    "handle": "@alex_rivera",
+    "contact": "alex.rivera@gdgchapter.org",
+    "responsibilities": [
+      "chapter operations",
+      "sponsorship approvals",
+      "room bookings",
+      "external university administration relations",
+      "overall lead",
+      "budget signing"
+    ],
+    "forms": [
+      {
+        "name": "Room Reservation Request",
+        "url": "https://forms.gle/room-reserve-gdg"
+      },
+      {
+        "name": "External Sponsorship Approval",
+        "url": "https://forms.gle/sponsor-gdg"
+      }
+    ]
+  },
+  {
+    "role": "Creatives & Branding Co-Lead",
+    "name": "Chloe Chen",
+    "handle": "@chloe_creatives",
+    "contact": "chloe.chen@gdgchapter.org",
+    "responsibilities": [
+      "poster designs",
+      "branding guidelines",
+      "social media templates",
+      "stickers and merchandise editing",
+      "video editing",
+      "event photos"
+    ],
+    "forms": [
+      {
+        "name": "Design Asset Request Form",
+        "url": "https://forms.gle/creatives-request-gdg"
+      }
+    ]
+  },
+  {
+    "role": "Logistics & Event Manager",
+    "name": "Marcus Vance",
+    "handle": "@marcus_logistics",
+    "contact": "marcus.vance@gdgchapter.org",
+    "responsibilities": [
+      "catering and food coordinates",
+      "sound system configuration",
+      "sign-in tables",
+      "venue setup",
+      "speaker gifts",
+      "event seating charts"
+    ],
+    "forms": [
+      {
+        "name": "Catering Preference Form",
+        "url": "https://forms.gle/catering-order-gdg"
+      }
+    ]
+  },
+  {
+    "role": "Technical & Labs Lead",
+    "name": "Dani Solis",
+    "handle": "@dani_labs",
+    "contact": "dani.solis@gdgchapter.org",
+    "responsibilities": [
+      "speaker recruitment for tech talks",
+      "github repository setups",
+      "hackathon judging rubrics",
+      "hands-on coding workshops",
+      "cloud credits distribution",
+      "c++ algorithms",
+      "python machine learning topics"
+    ],
+    "forms": [
+      {
+        "name": "Tech Speaker Proposal Form",
+        "url": "https://forms.gle/tech-speaker-gdg"
+      },
+      {
+        "name": "Google Cloud Credit Request",
+        "url": "https://forms.gle/cloud-credits-gdg"
+      }
+    ]
+  },
+  {
+    "role": "Finance Secretary",
+    "name": "Sarah Jenkins",
+    "handle": "@sarah_finance",
+    "contact": "sarah.jenkins@gdgchapter.org",
+    "responsibilities": [
+      "reimbursements",
+      "receipt collection",
+      "bank account updates",
+      "snack budgets",
+      "financial ledger spreadsheet"
+    ],
+    "forms": [
+      {
+        "name": "Reimbursement Claim Sheet",
+        "url": "https://forms.gle/reimburser-gdg"
+      }
+    ]
+  }
+]
