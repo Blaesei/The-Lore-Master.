@@ -337,6 +337,7 @@ export default function App() {
   });
 
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [projectSearchQuery, setProjectSearchQuery] = useState("");
   const [selectedProjectTag, setSelectedProjectTag] = useState("All");
@@ -962,6 +963,36 @@ Try asking me about **DevFest**, **Solution Challenge**, or **Build with AI**!`;
     }
   };
 
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.type !== "application/pdf") {
+      triggerToast("Please upload a PDF file.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      setLoading(prev => ({ ...prev, upload: true }));
+      const response = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: formData
+      });
+      if (response.ok) {
+        triggerToast("Knowledge Base PDF uploaded and indexed successfully!");
+      } else {
+        throw new Error("Upload failed");
+      }
+    } catch (err) {
+      triggerToast("Failed to upload document.");
+    } finally {
+      setLoading(prev => ({ ...prev, upload: false }));
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#F8F9FA] text-[#202124] font-sans antialiased flex flex-col selection:bg-[#4285F4]/20">
       
@@ -1057,7 +1088,7 @@ Try asking me about **DevFest**, **Solution Challenge**, or **Build with AI**!`;
                 
                 <h2 className="text-4xl md:text-5xl lg:text-6xl font-sans font-black text-gray-900 leading-tight tracking-tight">
                   Lore Master for <br />
-                  <span className="text-[#4285F4] underline decoration-4 decoration-[#EA4335] underline-offset-8">local chapter admins</span>
+                  <span className="text-[#4285F4] underline decoration-4 decoration-[#EA4335] underline-offset-8">local chapter peeps</span>
                 </h2>
 
                 <p className="text-xs md:text-sm text-gray-500 leading-relaxed max-w-xl font-normal font-sans">
@@ -1389,18 +1420,6 @@ Try asking me about **DevFest**, **Solution Challenge**, or **Build with AI**!`;
             >
               <Database className={`w-4 h-4 ${activeTab === "historical" ? "text-[#EA4335]" : "text-gray-400"}`} />
               <span>Past Events Lore</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab("handoff")}
-              className={`py-2 px-4 rounded-full text-xs font-semibold flex items-center gap-2 cursor-pointer transition-all hover:scale-102 duration-150 ${
-                activeTab === "handoff"
-                  ? "bg-[#FBBC05]/10 text-[#FBBC05] border border-[#FBBC05]/20 shadow-sm"
-                  : "text-gray-600 hover:bg-slate-50 hover:text-gray-900 border border-transparent"
-              }`}
-            >
-              <FileText className={`w-4 h-4 ${activeTab === "handoff" ? "text-[#FBBC05]" : "text-gray-400"}`} />
-              <span>Handoff Summaries</span>
             </button>
 
             <button
@@ -2672,6 +2691,25 @@ Try asking me about **DevFest**, **Solution Challenge**, or **Build with AI**!`;
                   </span>
                 </div>
               </div>
+            </div>
+
+            <div className="border-t border-gray-200 mt-5 pt-5">
+              <label className="text-xs font-bold text-gray-500 block mb-2">Knowledge Base Management</label>
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileUpload}
+                className="hidden"
+                accept="application/pdf"
+              />
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={loading.upload}
+                className="w-full bg-slate-100 hover:bg-slate-200 text-gray-700 text-xs font-bold py-2 px-4 rounded-full cursor-pointer transition-all flex items-center justify-center gap-2"
+              >
+                {loading.upload ? "Uploading..." : "Upload Knowledge PDF"}
+              </button>
             </div>
 
             <div className="flex justify-end gap-2 pt-5 mt-5 border-t border-gray-200">
