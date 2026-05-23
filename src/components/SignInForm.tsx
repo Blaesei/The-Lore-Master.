@@ -140,23 +140,6 @@ export default function SignInForm({ onLoginSuccess, onGoBackHome, className = "
           </svg>
           <span className="font-semibold text-gray-700">Continue with Google</span>
         </button>
-
-        <div className="mt-6 flex flex-wrap justify-between text-[11px] text-gray-400 font-sans border-t border-gray-100 pt-4">
-          <button
-            onClick={onGoBackHome}
-            className="hover:text-gray-600 font-semibold cursor-pointer border-none bg-transparent"
-          >
-            Cancel Sign In
-          </button>
-          <a
-            href="https://developers.google.com"
-            target="_blank"
-            rel="noreferrer"
-            className="hover:text-[#4285F4] font-semibold flex items-center gap-1"
-          >
-            GDG Global Wiki <Sparkles className="w-3 h-3 text-[#FBBC05] inline" />
-          </a>
-        </div>
       </div>
     </div>
   );

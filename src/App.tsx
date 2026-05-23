@@ -1033,15 +1033,6 @@ Try asking me about **DevFest**, **Solution Challenge**, or **Build with AI**!`;
                 </button>
 
                 <div className="flex items-center gap-3">
-                  <div className="relative hidden md:block select-none">
-                    <Search className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                    <input
-                      type="text"
-                      placeholder="Search archive..."
-                      className="w-48 bg-slate-50 border border-gray-200 rounded-full py-1.5 px-8 text-xs text-gray-800 focus:outline-none focus:border-gray-300 cursor-not-allowed text-[11px]"
-                      disabled
-                    />
-                  </div>
                   <button
                     onClick={() => {
                       setShowSignInPage(true);
@@ -1083,15 +1074,6 @@ Try asking me about **DevFest**, **Solution Challenge**, or **Build with AI**!`;
                   >
                     <Bot className="w-4 h-4 text-white animate-pulse" />
                     <span>Open Concierge Chatbot</span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowSignInPage(true);
-                      triggerToast("Opening private administrative portal.");
-                    }}
-                    className="bg-white hover:bg-gray-50 active:scale-97 border border-gray-200 text-gray-800 font-bold py-3.5 px-6 rounded-full text-xs transition-all cursor-pointer shadow-sm justify-center"
-                  >
-                    Enter Admin Console
                   </button>
                 </div>
               </div>
@@ -1202,9 +1184,18 @@ Try asking me about **DevFest**, **Solution Challenge**, or **Build with AI**!`;
               </div>
             </section>
 
-            {/* LOWER TERMINAL FOOTER */}
-            <footer className="bg-slate-50 py-8 text-center border-t border-gray-200 text-gray-400 text-[10px] font-sans">
-              <p className="tracking-wide">© {new Date().getFullYear()} GDG AP Community Chapter. Built with White Autodesk Aesthetic.</p>
+            <footer className="bg-slate-50 py-8 border-t border-gray-200 text-gray-400 text-[10px] font-sans">
+              <div className="max-w-7xl mx-auto flex justify-between items-center px-8">
+                <p className="tracking-wide">© {new Date().getFullYear()} GDG AP Community Chapter. Built with White Autodesk Aesthetic.</p>
+                <a
+                  href="https://developers.google.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-[#4285F4] font-semibold flex items-center gap-1"
+                >
+                  GDG Global Wiki <Sparkles className="w-3 h-3 text-[#FBBC05] inline" />
+                </a>
+              </div>
             </footer>
           </div>
         )
@@ -1221,7 +1212,6 @@ Try asking me about **DevFest**, **Solution Challenge**, or **Build with AI**!`;
                 onClick={() => {
                   setGuestMode(false);
                   setShowSignInPage(false);
-                  triggerToast("Returning to Landing Page.");
                 }}
                 className="flex items-center space-x-3.5 cursor-pointer hover:opacity-80 transition-all font-sans bg-transparent border-none text-left p-0 focus:outline-none"
               >

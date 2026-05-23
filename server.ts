@@ -497,7 +497,16 @@ Respond precisely using the databases provided. If the user asks for a person, g
     return roleMatches || respMatches || customMatches;
   });
 
-  if (matchedProjects.length > 0) {
+  if (queryLower.includes("who are you") || queryLower.includes("what is this") || queryLower.includes("what do you do")) {
+    responseText = `### 🔮 The Lore Master
+I am "The Lore Master", your autonomous student organization historian and concierge for our GDG chapter.
+I'm here to help you:
+1. Find out who handles specific tasks (e.g., "who handles room bookings?").
+2. Get quick summaries of our past events (e.g., "tell me about DevFest 2026").
+3. Connect you with the right teams and forms!
+
+How can I help you today?`;
+  } else if (matchedProjects.length > 0) {
     const proj = matchedProjects[0];
     responseText += `### 📂 Historical Archive Found: **${proj.name}**\n\n`;
     responseText += `* **Year**: ${proj.year}\n`;
@@ -549,6 +558,7 @@ However, here is a quick directory of who handles top scopes:
 Try asking me about past events like **DevFest**, **Solution Challenge**, or **Build with AI**!`;
   responseText += `\n\n*(Note: Active falling back to quick directory as no matched archives were identified)*`;
   }
+
 
   res.json({
     response: responseText,
