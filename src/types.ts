@@ -27,12 +27,15 @@ export interface HistoricalProject {
     [key: string]: string | undefined;
   };
   key_takeaways: string[];
+  location?: string;
+  date?: string;
 }
 
 export interface VibeCheck {
   id: string;
   text: string;
   timestamp: string;
+  censored?: boolean;
 }
 
 export interface ChatMessage {

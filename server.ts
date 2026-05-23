@@ -317,13 +317,19 @@ app.get("/api/vibechecks/all", (req, res) => {
   }
 });
 
-// Submit anonymous vibe check (Sanitizes credentials)
+// Submit anonymous vibe check (Sanitizes credentials, censors profanity, and protects against spam)
 app.post("/api/vibechecks/submit", (req, res) => {
   try {
     const { message } = req.body;
     if (!message || message.trim() === "") {
       return res.status(400).json({ error: "Feedback message cannot be empty." });
     }
+
+    const PROFANITIES = [
+      "fuck", "fucking", "fucker", "shit", "shitting", "bitch", "bitches", "asshole", 
+      "ass", "crap", "damn", "bastard", "cunt", "dick", "pussy", "motherfucker", 
+      "whore", "piss", "slut"
+    ];
 
     // SANITIZE: Strip Slack/Discord ID markers, emails, names, or handles pattern
     // e.g. <@U12345678> or Discord user tags like Username#1234
@@ -333,20 +339,55 @@ app.post("/api/vibechecks/submit", (req, res) => {
     sanitizedText = sanitizedText.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/gi, "[EMAIL_REDACTED]");
     sanitizedText = sanitizedText.replace(/#\d{4}/g, ""); // Discord legacy tags
     
+    // Profanity check & masking
+    let hasProfanity = false;
+    PROFANITIES.forEach(word => {
+      const regex = new RegExp("\\b" + word + "s?\\b", "gi");
+      if (regex.test(sanitizedText)) {
+        hasProfanity = true;
+        sanitizedText = sanitizedText.replace(regex, (match) => {
+          return match[0] + "*".repeat(match.length - 1);
+        });
+      }
+    });
+
     // Clean trailing/leading spaces
     sanitizedText = sanitizedText.trim();
 
     const vibes = readVibes();
+
+    // RATE LIMITING / SPAM PREVENTION:
+    // 1. Prevent exact duplicate spam within the recent submissions
+    const isDuplicate = vibes.slice(0, 15).some(v => v.text.toLowerCase().trim() === sanitizedText.toLowerCase().trim());
+    if (isDuplicate) {
+      return res.status(400).json({ error: "Duplicate spam detected! Please submit unique, constructive feedback." });
+    }
+
+    // 2. Prevent consecutive fast submissions (global limit of 3 seconds)
+    if (vibes.length > 0) {
+      const timeDiff = Date.now() - new Date(vibes[0].timestamp).getTime();
+      if (timeDiff < 3000) {
+        return res.status(429).json({ error: "System rate limit: Please wait a few seconds before trying again." });
+      }
+    }
+
     const newVibe = {
       id: `vibe-${Date.now()}`,
       text: sanitizedText,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      censored: hasProfanity
     };
 
     vibes.unshift(newVibe); // Prepend new submit to top
     writeVibes(vibes);
 
-    res.json({ success: true, message: "Vibe check recorded securely and anonymously!", vibe: newVibe });
+    res.json({ 
+      success: true, 
+      message: hasProfanity 
+        ? "Submitted! Your feedback was sanitized and filtered for inappropriate content." 
+        : "Vibe check recorded securely and anonymously!", 
+      vibe: newVibe 
+    });
   } catch (err: any) {
     res.status(500).json({ error: "Failed to submit anonymous vibe check" });
   }

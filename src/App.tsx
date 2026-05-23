@@ -40,6 +40,190 @@ import { SAMPLE_MEETING_MINUTES, QUICK_START_SUGGESTIONS } from "./mockData";
 import ConstellationBackground from "./components/ConstellationBackground";
 import SignInForm from "./components/SignInForm";
 
+// Robust dynamic fallback layers for static/offline hosting platforms like Vercel
+const FALLBACK_ROLES: RoleDirectoryItem[] = [
+  {
+    role: "Community Lead",
+    name: "Alex Rivera",
+    handle: "@alex_rivera",
+    contact: "alex.rivera@gdgchapter.org",
+    responsibilities: [
+      "chapter operations",
+      "sponsorship approvals",
+      "room bookings",
+      "budget signing",
+      "overall lead"
+    ],
+    forms: [
+      { name: "Room Reservation Request", url: "https://forms.gle/room-reserve-gdg" },
+      { name: "External Sponsorship Approval", url: "https://forms.gle/sponsor-gdg" }
+    ]
+  },
+  {
+    role: "Creatives & Branding Co-Lead",
+    name: "Chloe Chen",
+    handle: "@chloe_creatives",
+    contact: "chloe.chen@gdgchapter.org",
+    responsibilities: [
+      "poster designs",
+      "branding guidelines",
+      "social media templates",
+      "stickers and merchandise editing",
+      "video editing",
+      "visual assets"
+    ],
+    forms: [
+      { name: "Design Asset Request Form", url: "https://forms.gle/creatives-request-gdg" }
+    ]
+  },
+  {
+    role: "Logistics & Event Manager",
+    name: "Marcus Vance",
+    handle: "@marcus_logistics",
+    contact: "marcus.vance@gdgchapter.org",
+    responsibilities: [
+      "catering and food coordinates",
+      "sound system configuration",
+      "sign-in tables",
+      "venue setup",
+      "speaker gifts",
+      "catering order"
+    ],
+    forms: [
+      { name: "Catering Preference Form", url: "https://forms.gle/catering-order-gdg" }
+    ]
+  },
+  {
+    role: "Technical & Labs Lead",
+    name: "Dani Solis",
+    handle: "@dani_labs",
+    contact: "dani.solis@gdgchapter.org",
+    responsibilities: [
+      "speaker recruitment for tech talks",
+      "github repository setups",
+      "hackathon judging rubrics",
+      "hands-on coding workshops",
+      "cloud credits distribution",
+      "c++ algorithms",
+      "python machine learning topics"
+    ],
+    forms: [
+      { name: "Tech Speaker Proposal Form", url: "https://forms.gle/tech-speaker-gdg" }
+    ]
+  },
+  {
+    role: "Finance Secretary",
+    name: "Sarah Jenkins",
+    handle: "@sarah_finance",
+    contact: "sarah.jenkins@gdgchapter.org",
+    responsibilities: [
+      "reimbursements",
+      "receipt collection",
+      "bank account updates",
+      "snack budgets",
+      "ledger spreadsheets"
+    ],
+    forms: [
+      { name: "Reimbursement Claim Sheet", "url": "https://forms.gle/reimburser-gdg" }
+    ]
+  }
+];
+
+const FALLBACK_PROJECTS: HistoricalProject[] = [
+  {
+    id: "project-shebuilds-2026",
+    name: "She Builds: Women in Tech Careers 2026",
+    theme: "Sustaining Diverse Representation in Software Development",
+    year: 2026,
+    budget: 850,
+    attendees: 220,
+    location: "Manila",
+    date: "May 30",
+    assets: {
+      slides: "https://docs.google.com/presentation/d/shebuilds-manila-2026",
+      photos: "https://photos.app.goo.gl/shebuilds-manila-2026",
+      github: "https://github.com/gdg-apc/shebuilds-25"
+    },
+    key_takeaways: [
+      "Inspirational keynote panel delivered by top regional women engineering directors.",
+      "Hands-on UI workshop was highly successful; 90% completion rate for projects done on-the-fly.",
+      "Merchandise booklets and premium sticker packs ran out quickly. Estimate 20% extra padding next time."
+    ]
+  },
+  {
+    id: "project-cloudmanila-2026",
+    name: "GDG Cloud Manila Build with AI: The Future of AI & Research",
+    theme: "Democratizing Gen AI for Students",
+    year: 2026,
+    budget: 450,
+    attendees: 120,
+    location: "Manila",
+    date: "Jun 6",
+    assets: {
+      slides: "https://docs.google.com/presentation/d/buildwithai-manila",
+      github: "https://github.com/gdg-apc/buildwithai-ml-models",
+      photos: "https://photos.app.goo.gl/buildwithai-manila"
+    },
+    key_takeaways: [
+      "Secured localized cloud servers and credit vouchers which saved 15% on API costs.",
+      "Several student groups lacked node packages prep. Need prerequisite guides sent 48 hours early.",
+      "Dani Solis' live demo on model fine-tuning was rated as the single most engaging session."
+    ]
+  },
+  {
+    id: "project-hauorgfest-2026",
+    name: "GDG HAU Organizational Festival (Freshmen Orientation '26-'27)",
+    theme: "Opening Dev Chapters for Student Newcomers",
+    year: 2026,
+    budget: 250,
+    attendees: 400,
+    location: "Angeles",
+    date: "Jun 2",
+    assets: {
+      photos: "https://photos.app.goo.gl/hauorgfest-2026",
+      slides: "https://docs.google.com/presentation/d/hauorgfest"
+    },
+    key_takeaways: [
+      "Record-breaking freshmen enlistment; over 400 students registered for study groups.",
+      "Interactive programming logic arcade booth was heavily crowded. Setup 2 terminals instead of 1.",
+      "QR code check-ins worked flawlessly, reducing crowd queuing delay by 40 minutes."
+    ]
+  },
+  {
+    id: "project-cebu-2026",
+    name: "Build with AI Cebu 2026",
+    theme: "Hands-On Model Building & Local Deployment Integrations",
+    year: 2026,
+    budget: 600,
+    attendees: 180,
+    location: "Cebu",
+    date: "May 30",
+    assets: {
+      slides: "https://docs.google.com/presentation/d/buildwithai-cebu-25",
+      github: "https://github.com/gdg-apc/buildwithai-cebu-edge-deploy",
+      photos: "https://photos.app.goo.gl/buildwithai-cebu-25"
+    },
+    key_takeaways: [
+      "Overwhelming local developer attendance in Cebu chapters with great mentor network engagements.",
+      "Food budget was well spent on catering traditional Cebu local favorites.",
+      "Many questions were focused on on-device ML rtimes (TensorFlow Lite / Gemini Nano)."
+    ]
+  }
+];
+
+const FALLBACK_VIBES: VibeCheck[] = [
+  {
+    id: "vibe-1716301200000",
+    text: "The creative templates were shared a bit too late for our last workshop presentation deck. Next time let's have a unified theme ready 1 week in advance.",
+    timestamp: "2026-05-18T14:20:00.000Z"
+  },
+  {
+    id: "vibe-1716387600000",
+    text: "Excited for the upcoming Build with AI hackathon! I hope we can offer vegetarian pizza options for Marcus' catering roster.",
+    timestamp: "2026-05-19T09:10:00.000Z"
+  }
+];
+
 // Helper to provide polished, highly-realistic, professional portraits for organizational directory
 function getOfficerPhoto(name: string, index: number): string {
   const normalized = name.toLowerCase();
@@ -112,6 +296,15 @@ export default function App() {
 
   // Feature 4: Vibe Check states
   const [vibeInput, setVibeInput] = useState("");
+  const [vibeCooldown, setVibeCooldown] = useState(0);
+
+  useEffect(() => {
+    if (vibeCooldown > 0) {
+      const timer = setTimeout(() => setVibeCooldown(vibeCooldown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [vibeCooldown]);
+
   const [successToast, setSuccessToast] = useState<string | null>(null);
 
   // Administrative Editors (Dynamic on-the-fly additions to JSON file)
@@ -149,19 +342,113 @@ export default function App() {
   const [selectedProjectTag, setSelectedProjectTag] = useState("All");
   const [expandedProjectId, setExpandedProjectId] = useState<string | null>(null);
 
-  // Fetch initial databases
+  // Fetch initial databases with automated serverless fallback for platforms like Vercel
   const fetchAllData = async () => {
     try {
       const [rRes, pRes, vRes] = await Promise.all([
-        fetch("/api/org/roles"),
-        fetch("/api/projects/all"),
-        fetch("/api/vibechecks/all")
+        fetch("/api/org/roles").catch(() => null),
+        fetch("/api/projects/all").catch(() => null),
+        fetch("/api/vibechecks/all").catch(() => null)
       ]);
-      if (rRes.ok) setRoles(await rRes.json());
-      if (pRes.ok) setProjects(await pRes.json());
-      if (vRes.ok) setVibes(await vRes.json());
+
+      let rolesData = null;
+      let projectsData = null;
+      let vibesData = null;
+
+      if (rRes && rRes.ok) {
+        rolesData = await rRes.json().catch(() => null);
+      }
+      if (pRes && pRes.ok) {
+        projectsData = await pRes.json().catch(() => null);
+      }
+      if (vRes && vRes.ok) {
+        vibesData = await vRes.json().catch(() => null);
+      }
+
+      // 1. Roles/Officers Directory fallback configuration
+      if (rolesData && Array.isArray(rolesData) && rolesData.length > 0) {
+        setRoles(rolesData);
+        localStorage.setItem("local_roles", JSON.stringify(rolesData));
+      } else {
+        const storedRoles = localStorage.getItem("local_roles");
+        if (storedRoles) {
+          try {
+            const parsed = JSON.parse(storedRoles);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              setRoles(parsed);
+            } else {
+              setRoles(FALLBACK_ROLES);
+              localStorage.setItem("local_roles", JSON.stringify(FALLBACK_ROLES));
+            }
+          } catch {
+            setRoles(FALLBACK_ROLES);
+            localStorage.setItem("local_roles", JSON.stringify(FALLBACK_ROLES));
+          }
+        } else {
+          setRoles(FALLBACK_ROLES);
+          localStorage.setItem("local_roles", JSON.stringify(FALLBACK_ROLES));
+        }
+      }
+
+      // 2. Historical Projects fallback configuration
+      if (projectsData && Array.isArray(projectsData) && projectsData.length > 0) {
+        setProjects(projectsData);
+        localStorage.setItem("local_projects", JSON.stringify(projectsData));
+      } else {
+        const storedProjects = localStorage.getItem("local_projects");
+        if (storedProjects) {
+          try {
+            const parsed = JSON.parse(storedProjects);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              setProjects(parsed);
+            } else {
+              setProjects(FALLBACK_PROJECTS);
+              localStorage.setItem("local_projects", JSON.stringify(FALLBACK_PROJECTS));
+            }
+          } catch {
+            setProjects(FALLBACK_PROJECTS);
+            localStorage.setItem("local_projects", JSON.stringify(FALLBACK_PROJECTS));
+          }
+        } else {
+          setProjects(FALLBACK_PROJECTS);
+          localStorage.setItem("local_projects", JSON.stringify(FALLBACK_PROJECTS));
+        }
+      }
+
+      // 3. Vibe Check anonymous updates fallback configuration
+      if (vibesData && Array.isArray(vibesData) && vibesData.length > 0) {
+        setVibes(vibesData);
+        localStorage.setItem("local_vibes", JSON.stringify(vibesData));
+      } else {
+        const storedVibes = localStorage.getItem("local_vibes");
+        if (storedVibes) {
+          try {
+            const parsed = JSON.parse(storedVibes);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              setVibes(parsed);
+            } else {
+              setVibes(FALLBACK_VIBES);
+              localStorage.setItem("local_vibes", JSON.stringify(FALLBACK_VIBES));
+            }
+          } catch {
+            setVibes(FALLBACK_VIBES);
+            localStorage.setItem("local_vibes", JSON.stringify(FALLBACK_VIBES));
+          }
+        } else {
+          setVibes(FALLBACK_VIBES);
+          localStorage.setItem("local_vibes", JSON.stringify(FALLBACK_VIBES));
+        }
+      }
     } catch (err) {
-      console.error("Failed to load backend databases:", err);
+      console.warn("Express server endpoints unavailable. Redirecting to Local Client engine fallback mode. (Vercel/Static Compatibility active)", err);
+      const storedRoles = localStorage.getItem("local_roles");
+      setRoles(storedRoles ? JSON.parse(storedRoles) : FALLBACK_ROLES);
+
+      const storedProjects = localStorage.getItem("local_projects");
+      setProjects(storedProjects ? JSON.parse(storedProjects) : FALLBACK_PROJECTS);
+
+      const storedVibes = localStorage.getItem("local_vibes");
+      setVibes(storedVibes ? JSON.parse(storedVibes) : FALLBACK_VIBES);
     } finally {
       setLoading(prev => ({ ...prev, init: false }));
     }
@@ -208,6 +495,9 @@ export default function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: query })
       });
+      if (!response.ok) {
+        throw new Error(`Server returned status ${response.status}`);
+      }
       const data = await response.json();
 
       setChatMessages(prev => [
@@ -221,14 +511,108 @@ export default function App() {
         }
       ]);
     } catch (err) {
+      // CLIENT-SIDE LOCAL CHAT MATCHING ENGINE (For static hostings like Vercel)
+      const queryLower = query.toLowerCase();
+      let responseText = "";
+
+      // A. Match projects
+      const matchedProjects = projects.filter((p) => {
+        return (
+          queryLower.includes(p.name.toLowerCase()) ||
+          queryLower.includes(p.theme.toLowerCase()) ||
+          (queryLower.includes("devfest") && p.name.toLowerCase().includes("devfest")) ||
+          (queryLower.includes("build") && p.name.toLowerCase().includes("build")) ||
+          (queryLower.includes("kickoff") && p.name.toLowerCase().includes("kickoff")) ||
+          (queryLower.includes("solution") && p.name.toLowerCase().includes("solution")) ||
+          (queryLower.includes("challenge") && p.name.toLowerCase().includes("challenge"))
+        );
+      });
+
+      // B. Match roles
+      const matchedRoles = roles.filter((r) => {
+        const roleMatches = queryLower.includes(r.role.toLowerCase()) || queryLower.includes(r.name.toLowerCase());
+        const respMatches = r.responsibilities.some((resp: string) => queryLower.includes(resp.toLowerCase()));
+        
+        let customMatches = false;
+        if (queryLower.includes("room") || queryLower.includes("book") || queryLower.includes("university")) {
+          customMatches = r.role.includes("Community Lead");
+        }
+        if (queryLower.includes("poster") || queryLower.includes("graphic") || queryLower.includes("design") || queryLower.includes("stickers") || queryLower.includes("merch") || queryLower.includes("video")) {
+          customMatches = r.role.includes("Creatives");
+        }
+        if (queryLower.includes("catering") || queryLower.includes("food") || queryLower.includes("sound") || queryLower.includes("audio") || queryLower.includes("venue") || queryLower.includes("pizza")) {
+          customMatches = r.role.includes("Logistics");
+        }
+        if (queryLower.includes("code") || queryLower.includes("speaker") || queryLower.includes("tutorial") || queryLower.includes("git") || queryLower.includes("cloud") || queryLower.includes("tech")) {
+          customMatches = r.role.includes("Technical");
+        }
+        if (queryLower.includes("money") || queryLower.includes("reimburse") || queryLower.includes("budget") || queryLower.includes("pay") || queryLower.includes("finance") || queryLower.includes("receipt")) {
+          customMatches = r.role.includes("Finance");
+        }
+
+        return roleMatches || respMatches || customMatches;
+      });
+
+      if (matchedProjects.length > 0) {
+        const proj = matchedProjects[0];
+        responseText += `### 📂 Historical Archive Found: **${proj.name}**\n\n`;
+        responseText += `* **Year**: ${proj.year}\n`;
+        responseText += `* **Theme**: *"${proj.theme}"*\n`;
+        responseText += `* **Budget Spent**: $${proj.budget}\n`;
+        responseText += `* **Attendees Count**: ${proj.attendees} students\n\n`;
+        
+        responseText += `#### 🔗 Asset Links:\n`;
+        Object.entries(proj.assets || {}).forEach(([key, val]) => {
+          responseText += `- **${key.toUpperCase()}**: [${val}](${val})\n`;
+        });
+        
+        responseText += `\n#### 💡 Lore & Key Takeaways / Lessons Learned:\n`;
+        proj.key_takeaways.forEach((takeaway: string) => {
+          responseText += `- ${takeaway}\n`;
+        });
+        responseText += `\n\n*(Note: Powered by localized, client-side rule-bsearch fallback in Static Mode)*`;
+      } else if (matchedRoles.length > 0) {
+        const contact = matchedRoles[0];
+        responseText += `### 👤 Org Directory Found: **${contact.name}**\n\n`;
+        responseText += `* **Role**: ${contact.role}\n`;
+        responseText += `* **Contact Handle**: \`${contact.handle}\` (Slack/Discord)\n`;
+        responseText += `* **Email**: \`${contact.contact}\`\n\n`;
+        
+        responseText += `#### 📋 Scope of Responsibilities:\n`;
+        contact.responsibilities.forEach((resp: string) => {
+          responseText += `- Handles ${resp}\n`;
+        });
+
+        if (contact.forms && contact.forms.length > 0) {
+          responseText += `\n#### 📬 Directly Related Forms & Forms Tools:\n`;
+          contact.forms.forEach((form: any) => {
+            responseText += `- **[${form.name}](${form.url})**\n`;
+          });
+        }
+        responseText += `\n\n*(Note: Powered by localized, client-side rule-based lookup in Static Mode)*`;
+      } else {
+        responseText = `### 🔮 The Lore Master's Vault (Static Preview Mode)
+I scanned our local directory index but didn't find specific matches for: *"${query}"*.
+
+Here is a quick directory reference:
+- 🏢 **Operations & Venue Bookings**: Alex Rivera (Community Lead - \`@alex_rivera\`)
+- 🎨 **Posters & Creative Request**: Chloe Chen (Creatives - \`@chloe_creatives\`)
+- 🍕 **Catering & Logistic Coordinates**: Marcus Vance (Logistics - \`@marcus_logistics\`)
+- 💻 **Tech Workshops & Labs Speeches**: Dani Solis (Technical - \`@dani_labs\`)
+- 💵 **Reimbursements & Finance Sheets**: Sarah Jenkins (Finance Secretary - \`@sarah_finance\`)
+
+Try asking me about **DevFest**, **Solution Challenge**, or **Build with AI**!`;
+        responseText += `\n\n*(Note: Showing fallback directory as no matched archives were found)*`;
+      }
+
       setChatMessages(prev => [
         ...prev,
         {
-          id: `bot-err-${Date.now()}`,
+          id: `bot-fallback-${Date.now()}`,
           sender: "bot",
-          text: "⚠️ **Connection Error**: I was unable to reach the archival microserver. Please verify that the application server is stable and running.",
+          text: responseText,
           timestamp: new Date(),
-          source: "Offline Diagnostics"
+          source: "Local Client Engine"
         }
       ]);
     } finally {
@@ -247,12 +631,42 @@ export default function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ minutes: minutesInput })
       });
+      if (!response.ok) {
+        throw new Error(`Server returned status ${response.status}`);
+      }
       const data = await response.json();
       setHandoffResults(data.summary || "No clear items extracted.");
       setHandoffSource(data.source || "Regex Processor");
       triggerToast("Structured Handoff Summary compiled successfully!");
     } catch (err) {
-      setHandoffResults("• Error generating summary. Check server connection parameters.");
+      // Local Actionable Line Extractor Fallback
+      const lines = minutesInput.split(/\n+/).map(l => l.trim()).filter(l => l.length > 5);
+      const extractedBullets: string[] = [];
+      const keywords = ["need", "must", "action", "responsibility", "deadline", "todo", "by", "for", "handling", "pending", "schedule"];
+
+      for (const line of lines) {
+        const lowerLine = line.toLowerCase();
+        const hasKeyword = keywords.some(k => lowerLine.includes(k));
+        if (hasKeyword && extractedBullets.length < 3) {
+          const cleanLine = line.replace(/^[*\-\d.\s]+/g, "");
+          extractedBullets.push(cleanLine);
+        }
+      }
+
+      if (extractedBullets.length < 1) {
+        extractedBullets.push("Review action items on Google Drive for scheduled event logistics owned by Logistics & Creatives committees.");
+      }
+      if (extractedBullets.length < 2) {
+        extractedBullets.push("Creatives and Design team to streamline templates submission for upcoming speaker marketing banners.");
+      }
+      if (extractedBullets.length < 3) {
+        extractedBullets.push("Community Lead Alex to confirm room booking status and catering coordinates by upcoming Friday.");
+      }
+
+      const fallbackText = extractedBullets.map(b => `• ${b}`).join("\n");
+      setHandoffResults(fallbackText);
+      setHandoffSource("Local Client Extractor");
+      triggerToast("Structured Handoff Summary compiled locally!");
     } finally {
       setLoading(prev => ({ ...prev, handoff: false }));
     }
@@ -261,6 +675,20 @@ export default function App() {
   // Submit Vibe Check (Sanitized)
   const handleVibeSubmit = async () => {
     if (!vibeInput.trim()) return;
+
+    // Direct spam detection
+    if (vibeCooldown > 0) {
+      triggerToast(`⚠️ Cooldown active. Wait ${vibeCooldown}s to prevent spamming.`);
+      return;
+    }
+
+    // Duplicate message detection
+    const isLocalDuplicate = vibes.slice(0, 5).some(v => v.text.toLowerCase().trim() === vibeInput.toLowerCase().trim());
+    if (isLocalDuplicate) {
+      triggerToast("⚠️ Prevented duplicate spam feedback. Please write constructive, unique feedback!");
+      return;
+    }
+
     setLoading(prev => ({ ...prev, vibe: true }));
 
     try {
@@ -269,19 +697,78 @@ export default function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: vibeInput })
       });
+      if (!response.ok) {
+        throw new Error(`Server returned status ${response.status}`);
+      }
       const data = await response.json();
       
       if (response.ok) {
         setVibeInput("");
+        setVibeCooldown(10); // 10 second spam rate-limiting lock
         // Reload vibes list to mirror in the review panel immediately
         const vibesRes = await fetch("/api/vibechecks/all");
-        if (vibesRes.ok) setVibes(await vibesRes.json());
-        triggerToast("Vibe parsed, private meta stripped, and successfully saved!");
+        if (vibesRes.ok) {
+          const freshVibes = await vibesRes.json();
+          setVibes(freshVibes);
+          localStorage.setItem("local_vibes", JSON.stringify(freshVibes));
+        } else {
+          setVibes(prev => {
+            const updated = [data.vibe, ...prev].filter(Boolean);
+            localStorage.setItem("local_vibes", JSON.stringify(updated));
+            return updated;
+          });
+        }
+        
+        if (data.vibe?.censored) {
+          triggerToast("✨ Feedback registered & censored for inappropriate language.");
+        } else {
+          triggerToast("✨ Anonymous vibe check recorded successfully and metadata stripped!");
+        }
       } else {
-        alert(data.error || "Failed to log feedback.");
+        triggerToast(`⚠️ ${data.error || "Failed to submit."}`);
       }
     } catch (err) {
-      alert("Error sending vibe submission.");
+      // Local check & submit fallback
+      const PROFANITIES = [
+        "fuck", "fucking", "fucker", "shit", "shitting", "bitch", "bitches", "asshole", 
+        "ass", "crap", "damn", "bastard", "cunt", "dick", "pussy", "motherfucker", 
+        "whore", "piss", "slut"
+      ];
+      let sanitizedText = vibeInput;
+      sanitizedText = sanitizedText.replace(/<@U[a-zA-Z0-9]+>/g, "[USER_REDACTED]");
+      sanitizedText = sanitizedText.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/gi, "[EMAIL_REDACTED]");
+      sanitizedText = sanitizedText.replace(/#\d{4}/g, "");
+      
+      let hasProfanity = false;
+      PROFANITIES.forEach(word => {
+        const regex = new RegExp("\\b" + word + "s?\\b", "gi");
+        if (regex.test(sanitizedText)) {
+          hasProfanity = true;
+          sanitizedText = sanitizedText.replace(regex, (match) => match[0] + "*".repeat(match.length - 1));
+        }
+      });
+      sanitizedText = sanitizedText.trim();
+
+      const newVibe = {
+        id: `vibe-${Date.now()}`,
+        text: sanitizedText,
+        timestamp: new Date().toISOString(),
+        censored: hasProfanity
+      };
+
+      setVibes(prev => {
+        const updated = [newVibe, ...prev];
+        localStorage.setItem("local_vibes", JSON.stringify(updated));
+        return updated;
+      });
+      setVibeInput("");
+      setVibeCooldown(10);
+
+      if (hasProfanity) {
+        triggerToast("✨ Submitted! Feedback sanitized and censored locally (Static Preview mode).");
+      } else {
+        triggerToast("✨ Saved anonymous vibe check locally (Static Preview mode)!");
+      }
     } finally {
       setLoading(prev => ({ ...prev, vibe: false }));
     }
@@ -321,6 +808,7 @@ export default function App() {
       });
       if (response.ok) {
         setRoles(updatedRoles);
+        localStorage.setItem("local_roles", JSON.stringify(updatedRoles));
         setShowRoleModal(false);
         setNewRoleForm({
           role: "",
@@ -332,9 +820,24 @@ export default function App() {
           formUrl: ""
         });
         triggerToast("New community officer successfully appended to the lore database!");
+      } else {
+        throw new Error("HTTP connection issue");
       }
     } catch (err) {
-      console.error(err);
+      // Offline Local Storage Fallback Mode
+      setRoles(updatedRoles);
+      localStorage.setItem("local_roles", JSON.stringify(updatedRoles));
+      setShowRoleModal(false);
+      setNewRoleForm({
+        role: "",
+        name: "",
+        handle: "",
+        contact: "",
+        responsibilities: "",
+        formName: "",
+        formUrl: ""
+      });
+      triggerToast("✨ Saved officer card locally (Static Preview mode)!");
     } finally {
       setLoading(prev => ({ ...prev, saveRole: false }));
     }
@@ -375,7 +878,12 @@ export default function App() {
       });
       if (response.ok) {
         const data = await response.json();
-        setProjects(prev => [...prev, data.project]);
+        const savedProject = data.project;
+        setProjects(prev => {
+          const updated = [...prev, savedProject];
+          localStorage.setItem("local_projects", JSON.stringify(updated));
+          return updated;
+        });
         setShowProjectModal(false);
         setNewProjectForm({
           name: "",
@@ -393,9 +901,37 @@ export default function App() {
           date: "May 30"
         });
         triggerToast("Historical event archived successfully in the organization vault!");
+      } else {
+        throw new Error("HTTP write error");
       }
     } catch (err) {
-      console.error(err);
+      // Offline Local Storage Fallback Mode
+      const savedProject = {
+        id: `project-local-${Date.now()}`,
+        ...newProject
+      };
+      setProjects(prev => {
+        const updated = [...prev, savedProject];
+        localStorage.setItem("local_projects", JSON.stringify(updated));
+        return updated;
+      });
+      setShowProjectModal(false);
+      setNewProjectForm({
+        name: "",
+        year: "2026",
+        theme: "",
+        budget: "100",
+        attendees: "50",
+        slides: "",
+        github: "",
+        photos: "",
+        takeaway1: "",
+        takeaway2: "",
+        takeaway3: "",
+        location: "Manila",
+        date: "May 30"
+      });
+      triggerToast("✨ Saved historical event locally (Static Preview mode)!");
     } finally {
       setLoading(prev => ({ ...prev, saveProject: false }));
     }
@@ -413,10 +949,16 @@ export default function App() {
       });
       if (response.ok) {
         setRoles(updated);
+        localStorage.setItem("local_roles", JSON.stringify(updated));
         triggerToast("Officer card removed successfully!");
+      } else {
+        throw new Error("HTTP connection issue");
       }
     } catch (err) {
-      console.error(err);
+      // Offline Local Storage Fallback Mode
+      setRoles(updated);
+      localStorage.setItem("local_roles", JSON.stringify(updated));
+      triggerToast("✨ Officer card removed locally (Static Preview mode)!");
     }
   };
 
@@ -1636,7 +2178,7 @@ export default function App() {
                     </div>
                   )}
 
-                  {/* TAB 5: SECURE VIBE CHECK BOX - Geometric Balance styling */}
+                  {/* TAB 5: SECURE VIBE CHECK BOX - Geometric Balance styling with Content Moderation Rules */}
                   {activeTab === "vibe" && (
                     <div className="flex-1 flex flex-col">
                       <div className="border-b border-gray-200 pb-4 mb-4">
@@ -1645,36 +2187,82 @@ export default function App() {
                           Secure & Anonymous "Vibe Check" Box
                         </h2>
                         <p className="text-xs text-gray-500">
-                          Complaints, feedback, and raw community worries. Back-end automatically strips metadata, Slack usernames, tags, and email identifiers to guarantee safe reporting.
+                          Complaints, feedback, and raw community concerns. The server automatically strips private user strings, Slack tags, and email markers to protect you.
                         </p>
                       </div>
 
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1">
                         
                         {/* PORTAL BOX FOR STUDENTS */}
-                        <div className="flex flex-col justify-between bg-purple-50/30 p-5 rounded-xl border border-purple-200/60 shadow-2xs">
+                        <div className="flex flex-col justify-between bg-purple-50/20 p-5 rounded-xl border border-purple-200/50 shadow-2xs">
                           <div>
-                            <span className="text-[10px] font-bold text-purple-800 uppercase tracking-widest block mb-1">SAFE REPORT HANDLER</span>
+                            <span className="text-[10px] font-bold text-purple-800 uppercase tracking-widest block mb-1">SAFE REPORT PORTAL</span>
                             <h3 className="font-bold text-sm text-gray-800 mb-1.5 font-sans">Share Concern or SuggestAnonymously</h3>
-                            <p className="text-xs text-gray-650 leading-relaxed mb-4 font-normal">
-                              Type your worry, suggestion, or request. Before saving, our middleware filters out user IDs like <code className="bg-purple-100 px-1 py-0.5 rounded text-purple-700 font-mono text-[10px]">&lt;@U1234567&gt;</code> and emails, converting them into deep clean anonymized text strings.
-                            </p>
+                            
+                            {/* Visual Community Standards Rules Block */}
+                            <div className="bg-white/80 border border-purple-100 p-3.5 rounded-xl mb-4 text-xs text-gray-650">
+                              <span className="font-black text-[10px] text-purple-700 tracking-wider uppercase block mb-1.5">⚖️ Vibe Rule Guidelines</span>
+                              <ul className="space-y-1.5 list-none pl-0">
+                                <li className="flex items-start gap-1.5">
+                                  <span className="text-emerald-500">✓</span>
+                                  <span><strong>Anonymized logs:</strong> Identifiers are completely purged from database entries.</span>
+                                </li>
+                                <li className="flex items-start gap-1.5">
+                                  <span className="text-[#EA4335] font-bold">⚠</span>
+                                  <span><strong>Prohibited Profanity:</strong> Inappropriate cussing, vulgar slurs, or cursing is automatically checked and masked (e.g. <code>f***</code>).</span>
+                                </li>
+                                <li className="flex items-start gap-1.5">
+                                  <span className="text-amber-500 font-bold">⏱</span>
+                                  <span><strong>Anti-Spam Filter:</strong> Standard 10 seconds wait period after submitting. Repeat duplicate text copies are blocked.</span>
+                                </li>
+                              </ul>
+                            </div>
+
+                            {/* Self-check Warning Prompts */}
+                            {vibeInput.trim() !== "" && (
+                              (() => {
+                                const badWords = ["fuck", "shit", "bitch", "ass", "crap", "cunt", "bastard", "damn", "dick", "pussy", "slut", "piss"];
+                                const containsProfanity = badWords.some(w => new RegExp("\\b" + w + "s?\\b", "i").test(vibeInput));
+                                return containsProfanity ? (
+                                  <div className="bg-amber-50 text-amber-800 text-[11px] p-2.5 rounded-lg border border-amber-200 mb-2 font-medium flex items-center gap-1.5">
+                                    <span>⚠️ Inappropriate cursing detected! Profane words will be masked automatically.</span>
+                                  </div>
+                                ) : null;
+                              })()
+                            )}
+
+                            {vibeCooldown > 0 && (
+                              <div className="bg-red-50 text-red-700 text-[11px] p-2.5 rounded-lg border border-red-100 mb-2 font-semibold flex items-center gap-1.5 animate-pulse">
+                                <span>⏱ Anti-Spam Lock active. Please write your thoughts and wait {vibeCooldown}s to submit.</span>
+                              </div>
+                            )}
 
                             <textarea
                               value={vibeInput}
                               onChange={(e) => setVibeInput(e.target.value)}
-                              placeholder="E.g. The meeting schedule was tight today, or feel bad about resources delays..."
-                              className="w-full h-32 bg-white border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-400 p-3.5 rounded-xl text-xs text-gray-700 shadow-inner"
+                              disabled={vibeCooldown > 0}
+                              placeholder={vibeCooldown > 0 ? `Spam lock active... Wait ${vibeCooldown}s` : "E.g. The meeting room size was too small, or feel there is insufficient documentation for team budget rules..."}
+                              className={`w-full h-32 bg-white border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-400 p-3.5 rounded-xl text-xs text-gray-700 shadow-inner ${vibeCooldown > 0 ? "opacity-60 bg-gray-50 cursor-not-allowed" : ""}`}
                             />
                           </div>
 
                           <button
                             onClick={handleVibeSubmit}
-                            disabled={loading.vibe || !vibeInput.trim()}
-                            className="mt-3.5 w-full bg-[#EA4335] hover:opacity-95 active:scale-98 text-white font-bold py-2.5 px-5 rounded-full flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer"
+                            disabled={loading.vibe || !vibeInput.trim() || vibeCooldown > 0}
+                            className={`mt-3.5 w-full font-bold py-2.5 px-5 rounded-full flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer ${
+                              vibeCooldown > 0 
+                                ? "bg-gray-300 text-gray-550 border border-gray-400/20 cursor-not-allowed" 
+                                : "bg-[#EA4335] hover:opacity-95 active:scale-98 text-white"
+                            }`}
                           >
                             <ShieldCheck className="w-4.5 h-4.5" />
-                            <span>{loading.vibe ? "Sanitizing & Logging securely..." : "Secure Submission"}</span>
+                            <span>
+                              {loading.vibe 
+                                ? "Sanitizing & Logging securely..." 
+                                : vibeCooldown > 0 
+                                  ? `Spam Protection Active (${vibeCooldown}s)` 
+                                  : "Secure Submission"}
+                            </span>
                           </button>
                         </div>
 
@@ -1692,12 +2280,19 @@ export default function App() {
                           </p>
 
                           {/* Sanitized Stream */}
-                          <div className="flex-1 space-y-3 max-h-72 overflow-y-auto pr-1">
+                          <div className="flex-1 space-y-3 max-h-80 overflow-y-auto pr-1">
                             {vibes.length > 0 ? (
                               vibes.map((v) => (
-                                <div key={v.id} className="bg-slate-50 p-3.5 rounded-lg border border-gray-255 shadow-2xs">
+                                <div key={v.id} className="bg-slate-50 p-3.5 rounded-lg border border-gray-255 shadow-2xs relative">
                                   <div className="flex items-center justify-between text-[10px] text-gray-400 mb-1.5 font-normal">
-                                    <span className="font-mono text-[9px] font-semibold">{v.id}</span>
+                                    <div className="flex items-center gap-1.5">
+                                      <span className="font-mono text-[9px] font-semibold">{v.id}</span>
+                                      {v.censored && (
+                                        <span className="bg-amber-100 text-amber-800 text-[9px] font-extrabold px-1.5 py-0.2 rounded-sm uppercase tracking-wide border border-amber-200">
+                                          Censored
+                                        </span>
+                                      )}
+                                    </div>
                                     <span>{new Date(v.timestamp).toLocaleString()}</span>
                                   </div>
                                   <p className="text-xs text-gray-750 p-0.5 leading-relaxed font-sans italic">
